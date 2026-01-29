@@ -764,13 +764,17 @@ local Library do
     end
 
     Library.Round = function(self, Number, Float)
-        local step = Float or 1
-        if step >= 1 then
-            return MathFloor(Number + 0.5)
+        local n = Float or 1
+        if n > 0 and n < 1 then
+            local mult = MathFloor(1 / n + 0.5)
+            if mult < 1 then mult = 1 end
+            return MathFloor(Number * mult + 0.5) / mult
         end
-        local mult = MathFloor(1 / step + 0.5)
-        if mult < 1 then mult = 1 end
-        return MathFloor(Number * mult + 0.5) / mult
+        if n >= 1 and n == MathFloor(n) then
+            local mult = 10 ^ n
+            return MathFloor(Number * mult + 0.5) / mult
+        end
+        return MathFloor(Number + 0.5)
     end
 
     Library.IsMouseOverFrame = function(self, Frame)
