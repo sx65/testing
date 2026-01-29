@@ -2218,7 +2218,9 @@ local Library do
             if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then 
                 Slider.Sliding = true
 
-                local SizeX = (Mouse.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
+                local w = Items["RealSlider"].Instance.AbsoluteSize.X
+                local SizeX = w > 0 and (Mouse.X - Items["RealSlider"].Instance.AbsolutePosition.X) / w or 0
+                SizeX = MathClamp(SizeX, 0, 1)
                 local Value = ((Data.Max - Data.Min) * SizeX) + Data.Min
 
                 Slider:Set(Value)
@@ -2234,7 +2236,9 @@ local Library do
         Library:Connect(UserInputService.InputChanged, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
                 if Slider.Sliding then
-                    local SizeX = (Mouse.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
+                    local w = Items["RealSlider"].Instance.AbsoluteSize.X
+                    local SizeX = w > 0 and (Mouse.X - Items["RealSlider"].Instance.AbsolutePosition.X) / w or 0
+                    SizeX = MathClamp(SizeX, 0, 1)
                     local Value = ((Data.Max - Data.Min) * SizeX) + Data.Min
 
                     Slider:Set(Value)
