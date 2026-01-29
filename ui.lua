@@ -305,7 +305,17 @@ local Library do
         ["RightControl"]      = "RightControl",
         ["LeftControl"]       = "LeftControl",
         ["LeftAlt"]           = "LeftAlt",
-        ["RightAlt"]          = "RightAlt"
+        ["RightAlt"]          = "RightAlt",
+        ["Enum.UserInputType.MouseButton1"] = "Mouse 1",
+        ["Enum.UserInputType.MouseButton2"] = "Mouse 2",
+        ["Enum.UserInputType.MouseButton3"] = "Mouse 3",
+        ["Enum.UserInputType.MouseButton4"] = "Mouse 4",
+        ["Enum.UserInputType.MouseButton5"] = "Mouse 5",
+        ["MouseButton1"]      = "Mouse 1",
+        ["MouseButton2"]      = "Mouse 2",
+        ["MouseButton3"]      = "Mouse 3",
+        ["MouseButton4"]      = "Mouse 4",
+        ["MouseButton5"]      = "Mouse 5"
     }
 
     Library.__index = Library
@@ -3761,15 +3771,24 @@ local Library do
             Items["KeyButton"]:Tween(nil, {TextColor3 = Library.Theme.Accent})
 
             local InputBegan 
-            InputBegan = UserInputService.InputBegan:Connect(function(Input)
-                if Input.UserInputType == Enum.UserInputType.Keyboard then 
-                    Keybind:Set(Input.KeyCode)
-                else
-                    Keybind:Set(Input.UserInputType)
-                end
+            task.defer(function()
+                InputBegan = UserInputService.InputBegan:Connect(function(Input)
+                    if Input.UserInputType == Enum.UserInputType.Keyboard then 
+                        Keybind:Set(Input.KeyCode)
+                    elseif Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.MouseButton2 or Input.UserInputType == Enum.UserInputType.MouseButton3 then
+                        Keybind:Set(Input.UserInputType)
+                    else
+                        local inputStr = tostring(Input.UserInputType)
+                        if inputStr == "Enum.UserInputType.MouseButton4" or inputStr == "Enum.UserInputType.MouseButton5" then
+                            Keybind:Set(Input.UserInputType)
+                        end
+                    end
 
-                InputBegan:Disconnect()
-                InputBegan = nil
+                    if InputBegan then
+                        InputBegan:Disconnect()
+                        InputBegan = nil
+                    end
+                end)
             end)
         end)
 
